@@ -6,6 +6,16 @@ import lejos.nxt.addon.ColorHTSensor;
 import lejos.util.Delay;
 
 
+/*-------------------------------------------------------------------/
+/	NXJ Mobius Line Tracer Program	 (C)BONN, 2014
+/--------------------------------------------------------------------/
+/
+/ Copyright (C) 2014 BONN.
+/ All Rights Reserved.
+/
+/-------------------------------------------------------------------*/
+
+
 public class LineSensor extends Thread
 {
 	
