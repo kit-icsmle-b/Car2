@@ -3,34 +3,56 @@ package th.nxj.Car;
 import lejos.util.Delay;
 
 
+/*-------------------------------------------------------------------/
+/	NXJ Mobius Line Tracer Program	 (C)BONN, 2014
+/--------------------------------------------------------------------/
+/
+/ Copyright (C) 2014 BONN.
+/ All Rights Reserved.
+/
+/-------------------------------------------------------------------*/
+
+/**
+ * マシンの走行モードを管理するクラス
+ * @author Taka
+ */
 public class DriveMode
 {
 	
-	public static final int COLOR_ID_BLACK = 7;
-	public static final int COLOR_ID_WHITE = 6;
-	public static final int COLOR_ID_GREEN = 1;
+	public static final int COLOR_ID_BLACK = 7;		// | 
+	public static final int COLOR_ID_WHITE = 6;		// |各色の番号
+	public static final int COLOR_ID_GREEN = 1;		// |
 	public static final int COLOR_ID_RED = 0;
 	
 	private static int state;
-	private static int line_lost_time;
-	WheelControl wheel = new WheelControl();
-	LineSensor sensor = new LineSensor();
+	private static int line_lost_time;				// 黒線を見失い続けている時間
+	WheelControl wheel = new WheelControl();		// タイヤの制御処理のインスタンス
+	LineSensor sensor = new LineSensor();			// カラーセンサーのインスタンス
 	
+	/**
+	 * コンストラクタ
+	 */
 	public DriveMode()
 	{
 		state = 0;
 		line_lost_time = 0;
 	}
 	
+	/**
+	 * 通常時の走行モード
+	 * 黒線検出で左へ、
+	 * 白色検出で右へ旋回する
+	 * @return
+	 */
 	public int InLineDrive()
 	{
 		int sstate = 0;
 		
-		switch( sensor.getState() )
+		switch( sensor.getState() )			// センサから色情報を取得
 		{
-		case COLOR_ID_BLACK:	// Black
+		case COLOR_ID_BLACK:
 			wheel.TurnLeft();
-			line_lost_time = 0;
+			line_lost_time = 0;				// 黒線が検出されたので、ロストしている時間を0に戻す
 			break;
 		case COLOR_ID_WHITE:	// White
 			wheel.TurnRight();
