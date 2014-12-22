@@ -22,6 +22,7 @@ public class DriveMode
 	public static final int COLOR_ID_BLACK = 7;		// | 
 	public static final int COLOR_ID_WHITE = 6;		// |ŠeF‚Ì”Ô†
 	public static final int COLOR_ID_GREEN = 1;		// |
+	public static final int COLOR_ID_RED = 0;
 	
 	private static int state;
 	private static int line_lost_time;				// •ü‚ğŒ©¸‚¢‘±‚¯‚Ä‚¢‚éŠÔ
@@ -61,6 +62,9 @@ public class DriveMode
 			DriveOnTheGreenInside();
 			sstate = 2;
 			break;
+		case COLOR_ID_RED:
+			wheel.TurnLeft();
+			line_lost_time = 0;
 		/*default:
 			wheel.TurnLeft();
 			line_lost_time++;
@@ -140,6 +144,9 @@ public class DriveMode
 			DriveOnTheGreenOutside();
 			sstate = 0;
 			break;
+		case COLOR_ID_RED:
+			wheel.TurnRight();
+			line_lost_time = 0;
 		/*default:
 			wheel.TurnLeft();
 			line_lost_time++;
