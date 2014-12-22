@@ -36,7 +36,7 @@ public class DriveMode
 			line_lost_time++;
 			break;
 		case COLOR_ID_GREEN:
-			DriveOnTheGreen();
+			DriveOnTheGreenInside();
 			sstate = 2;
 			break;
 		/*default:
@@ -52,7 +52,7 @@ public class DriveMode
 	}
 	
 	
-	private void DriveOnTheGreen()
+	private void DriveOnTheGreenInside()
 	{
 		for(;;)
 		{
@@ -66,6 +66,30 @@ public class DriveMode
 				break;
 			case COLOR_ID_GREEN:
 				wheel.TurnRight();
+				break;
+			/*default:
+				wheel.TurnLeft();
+				line_lost_time++;
+				break;*/
+			}
+		}
+	}
+	
+	
+	private void DriveOnTheGreenOutside()
+	{
+		for(;;)
+		{
+			switch( sensor.getState() )
+			{
+			case COLOR_ID_BLACK:	// Black
+				return;
+			case COLOR_ID_WHITE:	// White
+				wheel.TurnRight();
+				//line_lost_time++;
+				break;
+			case COLOR_ID_GREEN:
+				wheel.TurnLeft();
 				break;
 			/*default:
 				wheel.TurnLeft();
@@ -91,8 +115,7 @@ public class DriveMode
 			line_lost_time++;
 			break;
 		case COLOR_ID_GREEN:
-			//wheel.TurnRight2();
-			//wheel.setSpeed( 50 );
+			DriveOnTheGreenOutside();
 			sstate = 0;
 			break;
 		/*default:
