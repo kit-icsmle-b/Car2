@@ -1,0 +1,54 @@
+package th.nxj.Car;
+
+import lejos.nxt.Button;
+import lejos.nxt.LCD;
+import lejos.nxt.Motor;
+import lejos.nxt.NXTRegulatedMotor;
+import lejos.nxt.SensorPort;
+import lejos.nxt.addon.ColorHTSensor;
+import lejos.util.Delay;
+
+public class Car
+{
+	static ColorHTSensor CSensor = new ColorHTSensor( SensorPort.S1 );
+	static NXTRegulatedMotor LWheel = Motor.C; //Left
+	static NXTRegulatedMotor RWheel = Motor.A; //Right
+	
+	final String[] colorNames = {"Red", "Green", "Blue", "Yellow", "Magenta", "Orange",
+            "White", "Black", "Pink", "Gray", "Light gray", "Dark Gray", "Cyan"	};
+	final int COLOR_ID_BLACK = 7;
+	final int COLOR_ID_WHITE = 6;
+	
+	public static void main( String args[] )
+	{
+		System.out.println( "Car system standby..." );
+		Button.waitForAnyPress();
+		LWheel.setSpeed(50);
+		RWheel.setSpeed(50);
+		for(;;)
+		{
+			switch( CSensor.getColorID() )
+			{
+			case 7:	// Black
+				LWheel.forward();
+				RWheel.stop(true);
+				break;
+			case 6:	// White
+				RWheel.forward();
+				LWheel.stop(true);
+				break;
+			default:
+				RWheel.forward();
+				LWheel.stop(true);
+				break;
+			}
+			LCD.drawInt( CSensor.getColorID() , 0, 1);
+			LCD.refresh();
+			
+			Delay.msDelay( 200 );
+			
+		}
+		
+	}
+	
+}
