@@ -19,9 +19,11 @@ import lejos.nxt.LCD;
  */
 public class Car
 {
-	
+	/** 通常モード(8の字コースの大きい円の内側を走行中) */
 	private static final int LINESTATE_NORMAL = 0;
+	/** サーチモード(線を見失っている状態) */
 	private static final int LINESTATE_SEARCH = 1;
+	/** メビウスモード(8の字コースの小さい円の内側を走行中) */
 	private static final int LINESTATE_MOBIUS = 2;
 	
 	static DriveMode dmode = new DriveMode();				// マシンの走行モードを管理する機能のインスタンス
@@ -41,11 +43,11 @@ public class Car
 		
 		for(;;)												// メインループ
 		{
-			if( linestate == LINESTATE_NORMAL )				// 通常モード(線の内側を走行)だったら
+			if( linestate == LINESTATE_NORMAL )				// 通常モードだったら
 				linestate = dmode.InLineDrive();
-			else if( linestate == LINESTATE_SEARCH )		// サーチモード(線を見失った)だったら
+			else if( linestate == LINESTATE_SEARCH )		// サーチモードだったら
 				linestate = dmode.SearchLine();
-			else if( linestate == LINESTATE_MOBIUS )		// メビウスモード(八の字の小さい円の走行)だったら
+			else if( linestate == LINESTATE_MOBIUS )		// メビウスモードだったら
 				linestate = dmode.OutLineDrive();			// メソッド名変えないと…
 		}
 		

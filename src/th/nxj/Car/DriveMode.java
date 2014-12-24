@@ -14,17 +14,20 @@ import lejos.util.Delay;
 
 /**
  * マシンの走行モードを管理するクラス
- * @author Taka
+ * @author BONN
  */
 public class DriveMode
 {
-	
-	public static final int COLOR_ID_BLACK = 7;		// | 
-	public static final int COLOR_ID_WHITE = 6;		// |各色の番号
-	public static final int COLOR_ID_GREEN = 1;		// |
+	/** 黒色のID */
+	public static final int COLOR_ID_BLACK = 7;
+	/** 白色のID */
+	public static final int COLOR_ID_WHITE = 6;
+	/** 緑色のID */
+	public static final int COLOR_ID_GREEN = 1;
+	/** 赤色のID */
 	public static final int COLOR_ID_RED = 0;
 	
-	private static int state;
+	//private static int state;
 	private static int line_lost_time;				// 黒線を見失い続けている時間
 	WheelControl wheel = new WheelControl();		// タイヤの制御処理のインスタンス
 	LineSensor sensor = new LineSensor();			// カラーセンサーのインスタンス
@@ -34,7 +37,7 @@ public class DriveMode
 	 */
 	public DriveMode()
 	{
-		state = 0;
+		//state = 0;
 		line_lost_time = 0;
 	}
 	
