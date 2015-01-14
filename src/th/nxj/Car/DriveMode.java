@@ -29,7 +29,8 @@ public class DriveMode
 	
 	//private static int state;
 	private static int line_lost_time;				// 黒線を見失い続けている時間
-	WheelControl wheel = new WheelControl();		// タイヤの制御処理のインスタンス
+	private static int speed = 250;//200
+	WheelControl wheel = new WheelControl( speed );		// タイヤの制御処理のインスタンス
 	LineSensor sensor = new LineSensor();			// カラーセンサーのインスタンス
 	
 	/**
@@ -54,11 +55,11 @@ public class DriveMode
 		switch( sensor.getState() )			// センサから色情報を取得
 		{
 		case COLOR_ID_BLACK:
-			wheel.TurnLeft();
+			wheel.TurnLeft2();
 			line_lost_time = 0;				// 黒線が検出されたので、ロストしている時間を0に戻す
 			break;
 		case COLOR_ID_WHITE:
-			wheel.TurnRight();
+			wheel.TurnRight2();
 			line_lost_time++;				// 黒線を見失っている時間を増やす
 			break;
 		case COLOR_ID_GREEN:
@@ -66,7 +67,7 @@ public class DriveMode
 			sstate = 2;						// 切り替えが終わったら、メビウスモード(Car.javaを参照)に切り替えを指示
 			break;
 		case COLOR_ID_RED:
-			wheel.TurnLeft();
+			wheel.stop();					// 赤色はゴールなので停止
 			line_lost_time = 0;
 		/*default:
 			wheel.TurnLeft();
@@ -93,10 +94,10 @@ public class DriveMode
 			case COLOR_ID_BLACK:
 				return;						// 無事黒線が見つかったことになるので、処理を抜ける
 			case COLOR_ID_WHITE:
-				wheel.TurnLeft();
+				wheel.TurnLeft2();
 				break;
 			case COLOR_ID_GREEN:
-				wheel.TurnRight();
+				wheel.TurnRight2();
 				break;
 			/*default:
 				wheel.TurnLeft();
@@ -119,10 +120,10 @@ public class DriveMode
 			case COLOR_ID_BLACK:
 				return;						// 無事黒線が見つかったことになるので、処理を抜ける
 			case COLOR_ID_WHITE:
-				wheel.TurnRight();
+				wheel.TurnRight2();
 				break;
 			case COLOR_ID_GREEN:
-				wheel.TurnLeft();
+				wheel.TurnLeft2();
 				break;
 			/*default:
 				wheel.TurnLeft();
@@ -144,11 +145,11 @@ public class DriveMode
 		switch( sensor.getState() )			// カラーセンサから色情報を取得
 		{
 		case COLOR_ID_BLACK:
-			wheel.TurnRight();
+			wheel.TurnRight2();
 			line_lost_time = 0;
 			break;
 		case COLOR_ID_WHITE:
-			wheel.TurnLeft();
+			wheel.TurnLeft2();
 			line_lost_time++;
 			break;
 		case COLOR_ID_GREEN:
@@ -156,7 +157,7 @@ public class DriveMode
 			sstate = 0;						// 切り替えが終わったら、通常モード(Car.javaを参照)に切り替えを指示
 			break;
 		case COLOR_ID_RED:
-			wheel.TurnRight();
+			wheel.TurnRight2();
 			line_lost_time = 0;
 		/*default:
 			wheel.TurnLeft();
@@ -181,16 +182,21 @@ public class DriveMode
 	{
 		int sstate = 0;
 		
+		wheel.setSpeed( 100 );
+		
 		if( sensor.getState() != COLOR_ID_BLACK )
 		{
-			wheel.TurnLeft();
+			wheel.TurnRight();
 			Delay.msDelay( 200 );
 			wheel.stop();
 			Delay.msDelay( 500 );
 			sstate = 1;
 		}
 		else
+		{
 			sstate = 0;
+			wheel.setSpeed( speed );
+		}
 		
 		return sstate;
 	}

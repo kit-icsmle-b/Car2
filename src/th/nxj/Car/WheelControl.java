@@ -23,10 +23,10 @@ public class WheelControl
 	private static NXTRegulatedMotor RWheel = Motor.A; // Right
 	private static int speed;
 	
-	/**　ホイール回転速度を50に設定する　*/
+	/**　ホイール回転速度を200に設定する　*/
 	public WheelControl()
 	{
-		speed = 50;
+		speed = 200; // 50
 		LWheel.setSpeed( speed );
 		RWheel.setSpeed( speed );
 	}
@@ -53,6 +53,11 @@ public class WheelControl
 		RWheel.setSpeed( speed );
 	}
 	
+	public static int getSpeed()
+	{
+		return speed;
+	}
+	
 	/**
 	 * 左に旋回
 	 */
@@ -72,12 +77,14 @@ public class WheelControl
 	}
 	
 	/**
-	 * 前進
+	 * 緩やかに左旋回
 	 */
-	public void forward()
+	public void TurnLeft2()
 	{
-		LWheel.forward();
+		LWheel.setSpeed( 50 );
+		RWheel.setSpeed( 250 );//200
 		RWheel.forward();
+		LWheel.forward();
 	}
 	
 	/**
@@ -85,8 +92,35 @@ public class WheelControl
 	 */
 	public void TurnRight2()
 	{
-		LWheel.setSpeed( 50 );
-		RWheel.setSpeed( 20 );
+		LWheel.setSpeed( 250 );//200
+		RWheel.setSpeed( 50 );
+		LWheel.forward();
+		RWheel.forward();
+	}
+	
+	/**
+	 * その場で左旋回(マシンの中心軸はずれない)
+	 */
+	public void RollLeft()
+	{
+		LWheel.backward();
+		RWheel.forward();
+	}
+	
+	/**
+	 * その場で右旋回(マシンの中心軸はずれない)
+	 */
+	public void RollRight()
+	{
+		LWheel.forward();
+		RWheel.backward();
+	}
+	
+	/**
+	 * 前進
+	 */
+	public void forward()
+	{
 		LWheel.forward();
 		RWheel.forward();
 	}
