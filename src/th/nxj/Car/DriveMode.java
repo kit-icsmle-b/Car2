@@ -29,7 +29,8 @@ public class DriveMode
 	
 	//private static int state;
 	private static int line_lost_time;				// 黒線を見失い続けている時間
-	private static int speed = 250;//200
+	private static int color_state_now;
+	private static int speed = 250;//300//200
 	WheelControl wheel = new WheelControl( speed );		// タイヤの制御処理のインスタンス
 	LineSensor sensor = new LineSensor();			// カラーセンサーのインスタンス
 	
@@ -40,6 +41,7 @@ public class DriveMode
 	{
 		//state = 0;
 		line_lost_time = 0;
+		color_state_now = 50;
 	}
 	
 	/**
@@ -51,29 +53,37 @@ public class DriveMode
 	public int InLineDrive()
 	{
 		int sstate = 0;
+		int color = sensor.getState();
 		
-		switch( sensor.getState() )			// センサから色情報を取得
+		
+		if( color_state_now != color )
 		{
-		case COLOR_ID_BLACK:
-			wheel.TurnLeft2();
-			line_lost_time = 0;				// 黒線が検出されたので、ロストしている時間を0に戻す
-			break;
-		case COLOR_ID_WHITE:
-			wheel.TurnRight2();
-			line_lost_time++;				// 黒線を見失っている時間を増やす
-			break;
-		case COLOR_ID_GREEN:
-			DriveOnTheGreenInside();		// 走行する輪の切り替え専用の走行モードへ
-			sstate = 2;						// 切り替えが終わったら、メビウスモード(Car.javaを参照)に切り替えを指示
-			break;
-		case COLOR_ID_RED:
-			wheel.stop();					// 赤色はゴールなので停止
-			line_lost_time = 0;
-		/*default:
-			wheel.TurnLeft();
-			line_lost_time++;
-			break;*/
+			switch( color )			// センサから色情報を取得
+			{
+			case COLOR_ID_BLACK:
+				wheel.TurnLeft2();
+				line_lost_time = 0;				// 黒線が検出されたので、ロストしている時間を0に戻す
+				break;
+			case COLOR_ID_WHITE:
+				wheel.TurnRight2();
+				//line_lost_time++;				// 黒線を見失っている時間を増やす
+				break;
+			case COLOR_ID_GREEN:
+				DriveOnTheGreenInside();		// 走行する輪の切り替え専用の走行モードへ
+				sstate = 2;						// 切り替えが終わったら、メビウスモード(Car.javaを参照)に切り替えを指示
+				break;
+			case COLOR_ID_RED:
+				wheel.stop();					// 赤色はゴールなので停止
+				line_lost_time = 0;
+			/*default:
+				wheel.TurnLeft();
+				line_lost_time++;
+				break;*/
+			}
+			color_state_now = color;
 		}
+		if( color_state_now == COLOR_ID_WHITE )
+			line_lost_time++;
 		
 		if( line_lost_time > 5000 )			// 黒線を見失っている時間が5000カウントを超えたら
 			sstate = 1;						// サーチモード(Car.javaを参照)に切り替えを指示
@@ -87,24 +97,29 @@ public class DriveMode
 	 */
 	private void DriveOnTheGreenInside()
 	{
+		
+		int color;
+		
 		for(;;)
 		{
-			switch( sensor.getState() )		// カラーセンサから色情報を取得
+			color = sensor.getState();
+			if( color_state_now != color )
 			{
-			case COLOR_ID_BLACK:
-				return;						// 無事黒線が見つかったことになるので、処理を抜ける
-			case COLOR_ID_WHITE:
-				wheel.TurnLeft2();
-				break;
-			case COLOR_ID_GREEN:
-				wheel.TurnRight2();
-				break;
-			/*default:
-				wheel.TurnLeft();
-				line_lost_time++;
-				break;*/
+				switch( color )		// カラーセンサから色情報を取得
+				{
+				case COLOR_ID_BLACK:
+					return;						// 無事黒線が見つかったことになるので、処理を抜ける
+				case COLOR_ID_WHITE:
+					wheel.TurnLeft2();
+					break;
+				case COLOR_ID_GREEN:
+					wheel.TurnRight2();
+					break;
+				}
+				color_state_now = color;
 			}
 		}
+		
 	}
 	
 	
@@ -113,24 +128,33 @@ public class DriveMode
 	 */
 	private void DriveOnTheGreenOutside()
 	{
+		
+		int color;
+		
 		for(;;)
 		{
-			switch( sensor.getState() )		// センサーから色情報を取得
+			color = sensor.getState();
+			if( color_state_now != color )
 			{
-			case COLOR_ID_BLACK:
-				return;						// 無事黒線が見つかったことになるので、処理を抜ける
-			case COLOR_ID_WHITE:
-				wheel.TurnRight2();
-				break;
-			case COLOR_ID_GREEN:
-				wheel.TurnLeft2();
-				break;
-			/*default:
-				wheel.TurnLeft();
-				line_lost_time++;
-				break;*/
+				switch( color )		// センサーから色情報を取得
+				{
+				case COLOR_ID_BLACK:
+					return;						// 無事黒線が見つかったことになるので、処理を抜ける
+				case COLOR_ID_WHITE:
+					wheel.TurnRight2();
+					break;
+				case COLOR_ID_GREEN:
+					wheel.TurnLeft2();
+					break;
+					/*default:
+					wheel.TurnLeft();
+					line_lost_time++;
+					break;*/
+				}
+				color_state_now = color;
 			}
 		}
+		
 	}
 	
 	
@@ -141,29 +165,36 @@ public class DriveMode
 	public int OutLineDrive()
 	{
 		int sstate = 2;
+		int color = sensor.getState();
 		
-		switch( sensor.getState() )			// カラーセンサから色情報を取得
+		if( color_state_now != color )
 		{
-		case COLOR_ID_BLACK:
-			wheel.TurnRight2();
-			line_lost_time = 0;
-			break;
-		case COLOR_ID_WHITE:
-			wheel.TurnLeft2();
-			line_lost_time++;
-			break;
-		case COLOR_ID_GREEN:
-			DriveOnTheGreenOutside();		// 走行する輪の切り替え専用の走行モードへ
-			sstate = 0;						// 切り替えが終わったら、通常モード(Car.javaを参照)に切り替えを指示
-			break;
-		case COLOR_ID_RED:
-			wheel.TurnRight2();
-			line_lost_time = 0;
-		/*default:
-			wheel.TurnLeft();
-			line_lost_time++;
-			break;*/
+			switch( color )			// カラーセンサから色情報を取得
+			{
+			case COLOR_ID_BLACK:
+				wheel.TurnRight2();
+				line_lost_time = 0;
+				break;
+			case COLOR_ID_WHITE:
+				wheel.TurnLeft2();
+				//line_lost_time++;
+				break;
+			case COLOR_ID_GREEN:
+				DriveOnTheGreenOutside();		// 走行する輪の切り替え専用の走行モードへ
+				sstate = 0;						// 切り替えが終わったら、通常モード(Car.javaを参照)に切り替えを指示
+				break;
+			case COLOR_ID_RED:
+				wheel.TurnRight2();
+				line_lost_time = 0;
+				/*default:
+				wheel.TurnLeft();
+				line_lost_time++;
+				break;*/
+			}
+			color_state_now = color;
 		}
+		if( color_state_now == COLOR_ID_WHITE )
+			line_lost_time++;
 		
 		if( line_lost_time > 5000 )
 			sstate = 1;

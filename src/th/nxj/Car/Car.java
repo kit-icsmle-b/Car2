@@ -37,7 +37,8 @@ public class Car
 		
 		int linestate = 0;									// 現在の走行モード
 		
-		LCD.drawString( "Car system standby..." , 0 , 0 );
+		LCD.drawString( "Car system" , 0 , 0 );
+		LCD.drawString( "standby..." , 0 , 1 );
 		Button.waitForAnyPress();							// ボタンを押されるまで待つ
 		LCD.drawString( "GO" , 0 , 3 );
 		

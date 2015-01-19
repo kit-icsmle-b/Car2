@@ -30,7 +30,7 @@ public class LineSensor extends Thread
 	/** 白色のID */
 	public static final int COLOR_ID_WHITE = 6;
 	/** ディレイの有効時間 */
-	private final int DELAY_VALUE = 50;//100
+	private final int DELAY_VALUE = 50;//50//100
 	/** 現在センサが取得している色のID */
 	private static int state = 0;
 	/** カラーセンサ制御用のインスタンス */
@@ -45,7 +45,7 @@ public class LineSensor extends Thread
 	}
 	
 	/**
-	 * 200ミリ秒ごとに色情報を取得し、LCDに色のID値を表示する
+	 * DELAY_VALUEミリ秒ごとに色情報を取得し、LCDに色のID値を表示する
 	 */
 	public void run()
 	{

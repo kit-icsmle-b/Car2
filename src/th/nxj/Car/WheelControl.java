@@ -81,8 +81,8 @@ public class WheelControl
 	 */
 	public void TurnLeft2()
 	{
-		LWheel.setSpeed( 50 );
-		RWheel.setSpeed( 250 );//200
+		LWheel.setSpeed( 50 );//50
+		RWheel.setSpeed( 250 );//250//200
 		RWheel.forward();
 		LWheel.forward();
 	}
@@ -92,7 +92,7 @@ public class WheelControl
 	 */
 	public void TurnRight2()
 	{
-		LWheel.setSpeed( 250 );//200
+		LWheel.setSpeed( 250 );
 		RWheel.setSpeed( 50 );
 		LWheel.forward();
 		RWheel.forward();
