@@ -27,21 +27,34 @@ public class DriveMode
 	/** 赤色のID */
 	public static final int COLOR_ID_RED = 0;
 	
-	//private static int state;
-	private static int line_lost_time;				// 黒線を見失い続けている時間
-	private static int color_state_now;
-	private static int speed = 250;//300//200
-	WheelControl wheel = new WheelControl( speed );		// タイヤの制御処理のインスタンス
-	LineSensor sensor = new LineSensor();			// カラーセンサーのインスタンス
+	/** 通常時のスピード */
+	public static final int FORWARD_SPEED_1 = 500;
+	public static final int FORWARD_SPEED_2 = 70;
+	
+	/** 緑通過時のスピード */
+	public static final int SLOW_SPEED_1 = 400;
+	public static final int SLOW_SPEED_2 = 20;
+	
+	/** メビウスモード(小さい輪の中を走行する時)時のスピード */
+	public static final int MOBIUS_SPEED_1 = 400;
+	public static final int MOBIUS_SPEED_2 = 70;
+	
+	/** サーチモード時のスピード */
+	public static final int SEARCH_SPEED_1_2 = 100;
+	
+	
+	private static int line_lost_time;												// 黒線を見失い続けている時間
+	private static int color_state_prev;											// 直前のカラーセンサの値
+	WheelControl wheel = new WheelControl( FORWARD_SPEED_1 , FORWARD_SPEED_1 );		// タイヤの制御処理のインスタンス
+	LineSensor sensor = new LineSensor();											// カラーセンサーのインスタンス
 	
 	/**
 	 * コンストラクタ
 	 */
 	public DriveMode()
 	{
-		//state = 0;
 		line_lost_time = 0;
-		color_state_now = 50;
+		color_state_prev = 50;
 	}
 	
 	/**
@@ -52,41 +65,38 @@ public class DriveMode
 	 */
 	public int InLineDrive()
 	{
-		int sstate = 0;
-		int color = sensor.getState();
 		
+		int sstate = 0;												 // 現在の走行モード
+		int color = sensor.getState();								 // 最新のセンサ値
 		
-		if( color_state_now != color )
+		if( color_state_prev != color )								 // 最新のセンサ値と直前の値が異なっていたら
 		{
-			switch( color )			// センサから色情報を取得
+			switch( color )
 			{
 			case COLOR_ID_BLACK:
-				wheel.TurnLeft2();
-				line_lost_time = 0;				// 黒線が検出されたので、ロストしている時間を0に戻す
+				wheel.setSpeed( FORWARD_SPEED_2 , FORWARD_SPEED_1 );
+				wheel.forward();
+				line_lost_time = 0;									 // 黒線が検出されたので、ロストしている時間を0に戻す
 				break;
 			case COLOR_ID_WHITE:
-				wheel.TurnRight2();
-				//line_lost_time++;				// 黒線を見失っている時間を増やす
+				wheel.setSpeed( FORWARD_SPEED_1 , FORWARD_SPEED_2 );
+				wheel.forward();
 				break;
 			case COLOR_ID_GREEN:
-				DriveOnTheGreenInside();		// 走行する輪の切り替え専用の走行モードへ
-				sstate = 2;						// 切り替えが終わったら、メビウスモード(Car.javaを参照)に切り替えを指示
+				DriveOnTheGreenInside();							 // 走行する輪の切り替え専用の走行モードへ
+				sstate = 2;											 // 切り替えが終わったら、メビウスモード(Car.javaを参照)に切り替えを指示
 				break;
 			case COLOR_ID_RED:
-				wheel.stop();					// 赤色はゴールなので停止
+				wheel.stop();										 // 赤色はゴールなので停止
 				line_lost_time = 0;
-			/*default:
-				wheel.TurnLeft();
-				line_lost_time++;
-				break;*/
 			}
-			color_state_now = color;
+			color_state_prev = color;								 // 直前のセンサ値を更新
 		}
-		if( color_state_now == COLOR_ID_WHITE )
+		if( color_state_prev == COLOR_ID_WHITE )
 			line_lost_time++;
 		
-		if( line_lost_time > 5000 )			// 黒線を見失っている時間が5000カウントを超えたら
-			sstate = 1;						// サーチモード(Car.javaを参照)に切り替えを指示
+		if( line_lost_time > 5000 )									 // 黒線を見失っている時間が5000カウントを超えたら
+			sstate = 1;												 // サーチモード(Car.javaを参照)に切り替えを指示
 		
 		return sstate;
 	}
@@ -103,20 +113,22 @@ public class DriveMode
 		for(;;)
 		{
 			color = sensor.getState();
-			if( color_state_now != color )
+			if( color_state_prev != color )
 			{
-				switch( color )		// カラーセンサから色情報を取得
+				switch( color )
 				{
 				case COLOR_ID_BLACK:
-					return;						// 無事黒線が見つかったことになるので、処理を抜ける
+					return;											// 無事黒線が見つかったことになるので、処理を抜ける
 				case COLOR_ID_WHITE:
-					wheel.TurnLeft2();
+					wheel.setSpeed( SLOW_SPEED_2 , SLOW_SPEED_1 );
+					wheel.forward();
 					break;
 				case COLOR_ID_GREEN:
-					wheel.TurnRight2();
+					wheel.setSpeed( SLOW_SPEED_1 , SLOW_SPEED_2 );
+					wheel.forward();
 					break;
 				}
-				color_state_now = color;
+				color_state_prev = color;
 			}
 		}
 		
@@ -134,24 +146,22 @@ public class DriveMode
 		for(;;)
 		{
 			color = sensor.getState();
-			if( color_state_now != color )
+			if( color_state_prev != color )
 			{
-				switch( color )		// センサーから色情報を取得
+				switch( color )										// センサーから色情報を取得
 				{
 				case COLOR_ID_BLACK:
-					return;						// 無事黒線が見つかったことになるので、処理を抜ける
+					return;											// 無事黒線が見つかったことになるので、処理を抜ける
 				case COLOR_ID_WHITE:
-					wheel.TurnRight2();
+					wheel.setSpeed( SLOW_SPEED_1 , SLOW_SPEED_2 );
+					wheel.forward();
 					break;
 				case COLOR_ID_GREEN:
-					wheel.TurnLeft2();
+					wheel.setSpeed( SLOW_SPEED_2 , SLOW_SPEED_1 );
+					wheel.forward();
 					break;
-					/*default:
-					wheel.TurnLeft();
-					line_lost_time++;
-					break;*/
 				}
-				color_state_now = color;
+				color_state_prev = color;
 			}
 		}
 		
@@ -167,33 +177,30 @@ public class DriveMode
 		int sstate = 2;
 		int color = sensor.getState();
 		
-		if( color_state_now != color )
+		if( color_state_prev != color )
 		{
-			switch( color )			// カラーセンサから色情報を取得
+			switch( color )											// カラーセンサから色情報を取得
 			{
 			case COLOR_ID_BLACK:
-				wheel.TurnRight2();
+				wheel.setSpeed( MOBIUS_SPEED_1 , MOBIUS_SPEED_2 );
+				wheel.forward();
 				line_lost_time = 0;
 				break;
 			case COLOR_ID_WHITE:
-				wheel.TurnLeft2();
-				//line_lost_time++;
+				wheel.setSpeed( MOBIUS_SPEED_2 , MOBIUS_SPEED_1 );
+				wheel.forward();
 				break;
 			case COLOR_ID_GREEN:
-				DriveOnTheGreenOutside();		// 走行する輪の切り替え専用の走行モードへ
-				sstate = 0;						// 切り替えが終わったら、通常モード(Car.javaを参照)に切り替えを指示
+				DriveOnTheGreenOutside();							// 走行する輪の切り替え専用の走行モードへ
+				sstate = 0;											// 切り替えが終わったら、通常モード(Car.javaを参照)に切り替えを指示
 				break;
-			case COLOR_ID_RED:
+			/*case COLOR_ID_RED:
 				wheel.TurnRight2();
-				line_lost_time = 0;
-				/*default:
-				wheel.TurnLeft();
-				line_lost_time++;
-				break;*/
+				line_lost_time = 0;*/
 			}
-			color_state_now = color;
+			color_state_prev = color;
 		}
-		if( color_state_now == COLOR_ID_WHITE )
+		if( color_state_prev == COLOR_ID_WHITE )
 			line_lost_time++;
 		
 		if( line_lost_time > 5000 )
@@ -213,9 +220,9 @@ public class DriveMode
 	{
 		int sstate = 0;
 		
-		wheel.setSpeed( 100 );
+		wheel.setSpeed( SEARCH_SPEED_1_2 , SEARCH_SPEED_1_2 );
 		
-		if( sensor.getState() != COLOR_ID_BLACK )
+		if( sensor.getState() != COLOR_ID_BLACK )				// 黒線を見つけるまで継続
 		{
 			wheel.TurnRight();
 			Delay.msDelay( 200 );
@@ -226,7 +233,7 @@ public class DriveMode
 		else
 		{
 			sstate = 0;
-			wheel.setSpeed( speed );
+			wheel.setSpeed( 100 , 100 );
 		}
 		
 		return sstate;

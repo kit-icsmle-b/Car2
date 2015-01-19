@@ -15,48 +15,65 @@ import lejos.nxt.NXTRegulatedMotor;
 /**
  * ホイールの動作の管理・制御を行うクラス
  * @author BONN
- *
  */
 public class WheelControl
 {
+	
 	private static NXTRegulatedMotor LWheel = Motor.C; // Left
 	private static NXTRegulatedMotor RWheel = Motor.A; // Right
-	private static int speed;
+	private static int Lspeed , Rspeed;				   // 左右ホイールの回転速度
+	
 	
 	/**　ホイール回転速度を200に設定する　*/
 	public WheelControl()
 	{
-		speed = 200; // 50
-		LWheel.setSpeed( speed );
-		RWheel.setSpeed( speed );
+		Rspeed = Lspeed = 200;
+		LWheel.setSpeed( Lspeed );
+		RWheel.setSpeed( Rspeed );
 	}
+	
 	
 	/**
 	 * ホイールの回転速度をspeedの値に設定する
 	 * @param speed ホイールの回転速度
 	 */
-	public WheelControl( int speed )
+	public WheelControl( int Lspeed , int Rspeed )
 	{
-		this.speed = speed;
-		LWheel.setSpeed( speed );
-		RWheel.setSpeed( speed );
+		LWheel.setSpeed( Lspeed );
+		RWheel.setSpeed( Rspeed );
 	}
+	
 	
 	/**
 	 * ホイールの回転速度を変更する
 	 * @param speed	ホイールの回転速度
 	 */
-	public void setSpeed( int speed )
+	public void setSpeed( int Lspeed , int Rspeed )
 	{
-		this.speed = speed;
-		LWheel.setSpeed( speed );
-		RWheel.setSpeed( speed );
+		LWheel.setSpeed( Lspeed );
+		RWheel.setSpeed( Rspeed );
 	}
 	
-	public static int getSpeed()
+	
+	/**
+	 * 左ホイールの回転速度を取得する
+	 * @return Lspeed
+	 */
+	public static int getLSpeed()
 	{
-		return speed;
+		return Lspeed;
 	}
+	
+	
+	/**
+	 * 右ホイールの回転速度を取得する
+	 * @return Rspeed
+	 */
+	public static int getRSpeed()
+	{
+		return Rspeed;
+	}
+	
 	
 	/**
 	 * 左に旋回
@@ -67,6 +84,7 @@ public class WheelControl
 		LWheel.stop(true);
 	}
 	
+	
 	/**
 	 * 右に旋回
 	 */
@@ -76,27 +94,29 @@ public class WheelControl
 		RWheel.stop(true);
 	}
 	
+	
 	/**
 	 * 緩やかに左旋回
 	 */
-	public void TurnLeft2()
+	/*public void TurnLeft2()
 	{
-		LWheel.setSpeed( 50 );//50
-		RWheel.setSpeed( 250 );//250//200
+		//LWheel.setSpeed( Lspeed );//50
+		//RWheel.setSpeed( Rspeed );//250//200
 		RWheel.forward();
 		LWheel.forward();
-	}
+	}*/
 	
 	/**
 	 * 緩やかに右旋回
 	 */
-	public void TurnRight2()
+	/*public void TurnRight2()
 	{
-		LWheel.setSpeed( 250 );
-		RWheel.setSpeed( 50 );
+		LWheel.setSpeed( 400 );
+		RWheel.setSpeed( 70 );
 		LWheel.forward();
 		RWheel.forward();
-	}
+	}*/
+	
 	
 	/**
 	 * その場で左旋回(マシンの中心軸はずれない)
@@ -107,6 +127,7 @@ public class WheelControl
 		RWheel.forward();
 	}
 	
+	
 	/**
 	 * その場で右旋回(マシンの中心軸はずれない)
 	 */
@@ -116,6 +137,7 @@ public class WheelControl
 		RWheel.backward();
 	}
 	
+	
 	/**
 	 * 前進
 	 */
@@ -124,6 +146,7 @@ public class WheelControl
 		LWheel.forward();
 		RWheel.forward();
 	}
+	
 	
 	/**
 	 * 停止

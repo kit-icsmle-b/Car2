@@ -19,6 +19,7 @@ import lejos.nxt.LCD;
  */
 public class Car
 {
+	
 	/** 通常モード(8の字コースの大きい円の内側を走行中) */
 	private static final int LINESTATE_NORMAL = 0;
 	/** サーチモード(線を見失っている状態) */
