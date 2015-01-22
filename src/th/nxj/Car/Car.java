@@ -14,43 +14,43 @@ import lejos.nxt.LCD;
 /-------------------------------------------------------------------*/
 
 /**
- * ƒ‰ƒCƒ“ƒgƒŒ[ƒT‚Ì’†S•”•ª‚Æ‚È‚éƒNƒ‰ƒX
+ * ãƒ©ã‚¤ãƒ³ãƒˆãƒ¬ãƒ¼ã‚µã®ä¸­å¿ƒéƒ¨åˆ†ã¨ãªã‚‹ã‚¯ãƒ©ã‚¹
  * @author BONN
  */
 public class Car
 {
 	
-	/** ’Êíƒ‚[ƒh(8‚ÌšƒR[ƒX‚Ì‘å‚«‚¢‰~‚Ì“à‘¤‚ğ‘–s’†) */
+	/** é€šå¸¸ãƒ¢ãƒ¼ãƒ‰(8ã®å­—ã‚³ãƒ¼ã‚¹ã®å¤§ãã„å††ã®å†…å´ã‚’èµ°è¡Œä¸­) */
 	private static final int LINESTATE_NORMAL = 0;
-	/** ƒT[ƒ`ƒ‚[ƒh(ü‚ğŒ©¸‚Á‚Ä‚¢‚éó‘Ô) */
+	/** ã‚µãƒ¼ãƒãƒ¢ãƒ¼ãƒ‰(ç·šã‚’è¦‹å¤±ã£ã¦ã„ã‚‹çŠ¶æ…‹) */
 	private static final int LINESTATE_SEARCH = 1;
-	/** ƒƒrƒEƒXƒ‚[ƒh(8‚ÌšƒR[ƒX‚Ì¬‚³‚¢‰~‚Ì“à‘¤‚ğ‘–s’†) */
+	/** ãƒ¡ãƒ“ã‚¦ã‚¹ãƒ¢ãƒ¼ãƒ‰(8ã®å­—ã‚³ãƒ¼ã‚¹ã®å°ã•ã„å††ã®å†…å´ã‚’èµ°è¡Œä¸­) */
 	private static final int LINESTATE_MOBIUS = 2;
 	
-	static DriveMode dmode = new DriveMode();				// ƒ}ƒVƒ“‚Ì‘–sƒ‚[ƒh‚ğŠÇ—‚·‚é‹@”\‚ÌƒCƒ“ƒXƒ^ƒ“ƒX
+	static DriveMode dmode = new DriveMode();				// ãƒã‚·ãƒ³ã®èµ°è¡Œãƒ¢ãƒ¼ãƒ‰ã‚’ç®¡ç†ã™ã‚‹æ©Ÿèƒ½ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	
 	/**
-	 * ƒƒCƒ“ƒƒ\ƒbƒh
+	 * ãƒ¡ã‚¤ãƒ³ãƒ¡ã‚½ãƒƒãƒ‰
 	 * @param args
 	 */
 	public static void main( String args[] )
 	{
 		
-		int linestate = 0;									// Œ»İ‚Ì‘–sƒ‚[ƒh
+		int linestate = 0;									// ç¾åœ¨ã®èµ°è¡Œãƒ¢ãƒ¼ãƒ‰
 		
 		LCD.drawString( "Car system" , 0 , 0 );
 		LCD.drawString( "standby..." , 0 , 1 );
-		Button.waitForAnyPress();							// ƒ{ƒ^ƒ“‚ğ‰Ÿ‚³‚ê‚é‚Ü‚Å‘Ò‚Â
+		Button.waitForAnyPress();							// ãƒœã‚¿ãƒ³ã‚’æŠ¼ã•ã‚Œã‚‹ã¾ã§å¾…ã¤
 		LCD.drawString( "GO" , 0 , 3 );
 		
-		for(;;)												// ƒƒCƒ“ƒ‹[ƒv
+		for(;;)												// ãƒ¡ã‚¤ãƒ³ãƒ«ãƒ¼ãƒ—
 		{
-			if( linestate == LINESTATE_NORMAL )				// ’Êíƒ‚[ƒh‚¾‚Á‚½‚ç
+			if( linestate == LINESTATE_NORMAL )				// é€šå¸¸ãƒ¢ãƒ¼ãƒ‰ã ã£ãŸã‚‰
 				linestate = dmode.InLineDrive();
-			else if( linestate == LINESTATE_SEARCH )		// ƒT[ƒ`ƒ‚[ƒh‚¾‚Á‚½‚ç
+			else if( linestate == LINESTATE_SEARCH )		// ã‚µãƒ¼ãƒãƒ¢ãƒ¼ãƒ‰ã ã£ãŸã‚‰
 				linestate = dmode.SearchLine();
-			else if( linestate == LINESTATE_MOBIUS )		// ƒƒrƒEƒXƒ‚[ƒh‚¾‚Á‚½‚ç
-				linestate = dmode.OutLineDrive();			// ƒƒ\ƒbƒh–¼•Ï‚¦‚È‚¢‚Æc
+			else if( linestate == LINESTATE_MOBIUS )		// ãƒ¡ãƒ“ã‚¦ã‚¹ãƒ¢ãƒ¼ãƒ‰ã ã£ãŸã‚‰
+				linestate = dmode.OutLineDrive();			// ãƒ¡ã‚½ãƒƒãƒ‰åå¤‰ãˆãªã„ã¨â€¦
 		}
 		
 	}

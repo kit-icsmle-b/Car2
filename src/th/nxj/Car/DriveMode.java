@@ -13,45 +13,45 @@ import lejos.util.Delay;
 /-------------------------------------------------------------------*/
 
 /**
- * ƒ}ƒVƒ“‚Ì‘–sƒ‚[ƒh‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+ * Management class of running mode of the machine. 
  * @author BONN
  */
 public class DriveMode
 {
-	/** •F‚ÌID */
+	/** Black color ID */
 	public static final int COLOR_ID_BLACK = 7;
-	/** ”’F‚ÌID */
+	/** White color ID */
 	public static final int COLOR_ID_WHITE = 6;
-	/** —ÎF‚ÌID */
+	/** Green color ID */
 	public static final int COLOR_ID_GREEN = 1;
-	/** ÔF‚ÌID */
+	/** Red color ID */
 	public static final int COLOR_ID_RED = 0;
 	
-	/** ’Êí‚ÌƒXƒs[ƒh */
+	/** Speed of normal running mode */
 	public static final int NORMAL_SPEED_1 = 430;
 	public static final int NORMAL_SPEED_2 = 50;
 	
-	/** —Î’Ê‰ß‚ÌƒXƒs[ƒh */
+	/** Speed of running on green mode */
 	public static final int SLOW_SPEED_1 = 300;
 	public static final int SLOW_SPEED_2 = 10;
 	
-	/** ƒƒrƒEƒXƒ‚[ƒh(¬‚³‚¢—Ö‚Ì’†‚ğ‘–s‚·‚é)‚ÌƒXƒs[ƒh */
+	/** Speed of Mobius( running into small circle )mode */
 	public static final int MOBIUS_SPEED_1 = 400;
 	public static final int MOBIUS_SPEED_2 = 170;
 	
-	/** ƒT[ƒ`ƒ‚[ƒh‚ÌƒXƒs[ƒh */
+	/** Speed of line search mode */
 	public static final int SEARCH_SPEED_1_2 = 100;
 	
 	
-	private static int line_lost_time;												// •ü‚ğŒ©¸‚¢‘±‚¯‚Ä‚¢‚éŠÔ
-	private static int color_state_prev;											// ’¼‘O‚ÌƒJƒ‰[ƒZƒ“ƒT‚Ì’l
-	private static int white_scan_count = 0;
-	private static int mobius_pass_flag = 0;
-	WheelControl wheel = new WheelControl( NORMAL_SPEED_1 , NORMAL_SPEED_1 );		// ƒ^ƒCƒ„‚Ì§Œäˆ—‚ÌƒCƒ“ƒXƒ^ƒ“ƒX
-	LineSensor sensor = new LineSensor();											// ƒJƒ‰[ƒZƒ“ƒT[‚ÌƒCƒ“ƒXƒ^ƒ“ƒX
+	private static int line_lost_time;
+	private static int color_state_prev;											// before color value
+	private static int white_scan_count = 0;										// 
+	private static int mobius_pass_flag = 0;										// Mobius mode passed flag
+	WheelControl wheel = new WheelControl( NORMAL_SPEED_1 , NORMAL_SPEED_1 );		// ã‚¿ã‚¤ãƒ¤ã®åˆ¶å¾¡å‡¦ç†ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
+	LineSensor sensor = new LineSensor();											// ã‚«ãƒ©ãƒ¼ã‚»ãƒ³ã‚µãƒ¼ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * constructor
 	 */
 	public DriveMode()
 	{
@@ -60,25 +60,26 @@ public class DriveMode
 	}
 	
 	/**
-	 * ’Êí‚Ì‘–sƒ‚[ƒh
-	 * •üŒŸo‚Å¶‚ÖA
-	 * ”’FŒŸo‚Å‰E‚Öù‰ñ‚·‚é
-	 * @return sstate Ÿ‚Ìƒ‹[ƒv‚ÉÀs‚·‚×‚«‘–sƒ‚[ƒh‚Ìƒtƒ‰ƒO’l
+	 * Normal running mode.
+	 * Scan black to Turn left,
+	 * Scan white to Turn right.
+	 * @return sstate The value of the running mode to be executed
+	 * 	when the next loop.
 	 */
 	public int InLineDrive()
 	{
 		
-		int sstate = 0;												 // Œ»İ‚Ì‘–sƒ‚[ƒh
-		int color = sensor.getState();								 // ÅV‚ÌƒZƒ“ƒT’l
+		int sstate = 0;												 // Current running mode
+		int color = sensor.getState();								 // Latest color value
 		
-		if( color_state_prev != color )								 // ÅV‚ÌƒZƒ“ƒT’l‚Æ’¼‘O‚Ì’l‚ªˆÙ‚È‚Á‚Ä‚¢‚½‚ç
+		if( color_state_prev != color )								 // æœ€æ–°ã®ã‚»ãƒ³ã‚µå€¤ã¨ç›´å‰ã®å€¤ãŒç•°ãªã£ã¦ã„ãŸã‚‰
 		{
 			switch( color )
 			{
 			case COLOR_ID_BLACK:
 				wheel.setSpeed( NORMAL_SPEED_2 , NORMAL_SPEED_1 );
 				wheel.forward();
-				line_lost_time = 0;									 // •ü‚ªŒŸo‚³‚ê‚½‚Ì‚ÅAƒƒXƒg‚µ‚Ä‚¢‚éŠÔ‚ğ0‚É–ß‚·
+				line_lost_time = 0;									 // é»’ç·šãŒæ¤œå‡ºã•ã‚ŒãŸã®ã§ã€ãƒ­ã‚¹ãƒˆã—ã¦ã„ã‚‹æ™‚é–“ã‚’0ã«æˆ»ã™
 				break;
 			case COLOR_ID_WHITE:
 				if( mobius_pass_flag == 0 )
@@ -88,29 +89,29 @@ public class DriveMode
 				wheel.forward();
 				break;
 			case COLOR_ID_GREEN:
-				DriveOnTheGreenInside();							 // ‘–s‚·‚é—Ö‚ÌØ‚è‘Ö‚¦ê—p‚Ì‘–sƒ‚[ƒh‚Ö
-				sstate = 2;											 // Ø‚è‘Ö‚¦‚ªI‚í‚Á‚½‚çAƒƒrƒEƒXƒ‚[ƒh(Car.java‚ğQÆ)‚ÉØ‚è‘Ö‚¦‚ğw¦
+				DriveOnTheGreenInside();							 // èµ°è¡Œã™ã‚‹è¼ªã®åˆ‡ã‚Šæ›¿ãˆå°‚ç”¨ã®èµ°è¡Œãƒ¢ãƒ¼ãƒ‰ã¸
+				sstate = 2;											 // åˆ‡ã‚Šæ›¿ãˆãŒçµ‚ã‚ã£ãŸã‚‰ã€ãƒ¡ãƒ“ã‚¦ã‚¹ãƒ¢ãƒ¼ãƒ‰(Car.javaã‚’å‚ç…§)ã«åˆ‡ã‚Šæ›¿ãˆã‚’æŒ‡ç¤º
 				break;
 			case COLOR_ID_RED:
-				wheel.stop();										 // ÔF‚ÍƒS[ƒ‹‚È‚Ì‚Å’â~
+				wheel.stop();										 // èµ¤è‰²ã¯ã‚´ãƒ¼ãƒ«ãªã®ã§åœæ­¢
 				line_lost_time = 0;
 				white_scan_count = 0;
 				mobius_pass_flag = 0;
 			}
-			color_state_prev = color;								 // ’¼‘O‚ÌƒZƒ“ƒT’l‚ğXV
+			color_state_prev = color;								 // ç›´å‰ã®ã‚»ãƒ³ã‚µå€¤ã‚’æ›´æ–°
 		}
 		if( color_state_prev == COLOR_ID_WHITE )
 			line_lost_time++;
 		
-		if( line_lost_time > /*5000*/10000 )									 // •ü‚ğŒ©¸‚Á‚Ä‚¢‚éŠÔ‚ª5000ƒJƒEƒ“ƒg‚ğ’´‚¦‚½‚ç
-			sstate = 1;												 // ƒT[ƒ`ƒ‚[ƒh(Car.java‚ğQÆ)‚ÉØ‚è‘Ö‚¦‚ğw¦
+		if( line_lost_time > /*5000*/10000 )									 // é»’ç·šã‚’è¦‹å¤±ã£ã¦ã„ã‚‹æ™‚é–“ãŒ5000ã‚«ã‚¦ãƒ³ãƒˆã‚’è¶…ãˆãŸã‚‰
+			sstate = 1;												 // ã‚µãƒ¼ãƒãƒ¢ãƒ¼ãƒ‰(Car.javaã‚’å‚ç…§)ã«åˆ‡ã‚Šæ›¿ãˆã‚’æŒ‡ç¤º
 		
 		return sstate;
 	}
 	
 	
 	/**
-	 * ‘å‚«‚¢—Ö‚©‚ç¬‚³‚¢—Ö‚ÉˆÚ“®‚·‚é‚Æ‚«‚Ìˆ—
+	 * å¤§ãã„è¼ªã‹ã‚‰å°ã•ã„è¼ªã«ç§»å‹•ã™ã‚‹ã¨ãã®å‡¦ç†
 	 */
 	private void DriveOnTheGreenInside()
 	{
@@ -125,7 +126,7 @@ public class DriveMode
 				switch( color )
 				{
 				case COLOR_ID_BLACK:
-					return;											// –³–•ü‚ªŒ©‚Â‚©‚Á‚½‚±‚Æ‚É‚È‚é‚Ì‚ÅAˆ—‚ğ”²‚¯‚é
+					return;											// ç„¡äº‹é»’ç·šãŒè¦‹ã¤ã‹ã£ãŸã“ã¨ã«ãªã‚‹ã®ã§ã€å‡¦ç†ã‚’æŠœã‘ã‚‹
 				case COLOR_ID_WHITE:
 					wheel.setSpeed( SLOW_SPEED_2 , SLOW_SPEED_1 );
 					wheel.forward();
@@ -143,7 +144,7 @@ public class DriveMode
 	
 	
 	/**
-	 * ¬‚³‚¢—Ö‚©‚ç‘å‚«‚¢—Ö‚ÖˆÚ“®‚·‚é‚Æ‚«‚Ìˆ—
+	 * å°ã•ã„è¼ªã‹ã‚‰å¤§ãã„è¼ªã¸ç§»å‹•ã™ã‚‹ã¨ãã®å‡¦ç†
 	 */
 	private void DriveOnTheGreenOutside()
 	{
@@ -155,11 +156,11 @@ public class DriveMode
 			color = sensor.getState();
 			if( color_state_prev != color )
 			{
-				switch( color )										// ƒZƒ“ƒT[‚©‚çFî•ñ‚ğæ“¾
+				switch( color )										// ã‚»ãƒ³ã‚µãƒ¼ã‹ã‚‰è‰²æƒ…å ±ã‚’å–å¾—
 				{
 				case COLOR_ID_BLACK:
 					mobius_pass_flag = 1;
-					return;											// –³–•ü‚ªŒ©‚Â‚©‚Á‚½‚±‚Æ‚É‚È‚é‚Ì‚ÅAˆ—‚ğ”²‚¯‚é
+					return;											// ç„¡äº‹é»’ç·šãŒè¦‹ã¤ã‹ã£ãŸã“ã¨ã«ãªã‚‹ã®ã§ã€å‡¦ç†ã‚’æŠœã‘ã‚‹
 				case COLOR_ID_WHITE:
 					wheel.setSpeed( SLOW_SPEED_1 , SLOW_SPEED_2 );
 					wheel.forward();
@@ -177,8 +178,8 @@ public class DriveMode
 	
 	
 	/**
-	 * ƒƒrƒEƒXƒ‚[ƒh(¬‚³‚¢—Ö‚Ì’†‚ğ‘–s‚·‚é‚Ìˆ—)
-	 * @return@sstate Ÿ‚Ìƒ‹[ƒv‚ÉÀs‚·‚×‚«‘–sƒ‚[ƒh‚Ìƒtƒ‰ƒO’l
+	 * ãƒ¡ãƒ“ã‚¦ã‚¹ãƒ¢ãƒ¼ãƒ‰(å°ã•ã„è¼ªã®ä¸­ã‚’èµ°è¡Œã™ã‚‹æ™‚ã®å‡¦ç†)
+	 * @returnã€€sstate æ¬¡ã®ãƒ«ãƒ¼ãƒ—æ™‚ã«å®Ÿè¡Œã™ã¹ãèµ°è¡Œãƒ¢ãƒ¼ãƒ‰ã®ãƒ•ãƒ©ã‚°å€¤
 	 */
 	public int OutLineDrive()
 	{
@@ -187,7 +188,7 @@ public class DriveMode
 		
 		if( color_state_prev != color )
 		{
-			switch( color )											// ƒJƒ‰[ƒZƒ“ƒT‚©‚çFî•ñ‚ğæ“¾
+			switch( color )											// ã‚«ãƒ©ãƒ¼ã‚»ãƒ³ã‚µã‹ã‚‰è‰²æƒ…å ±ã‚’å–å¾—
 			{
 			case COLOR_ID_BLACK:
 				wheel.setSpeed( MOBIUS_SPEED_1 + white_scan_count , MOBIUS_SPEED_2 );
@@ -200,8 +201,8 @@ public class DriveMode
 				white_scan_count+=25;
 				break;
 			case COLOR_ID_GREEN:
-				DriveOnTheGreenOutside();							// ‘–s‚·‚é—Ö‚ÌØ‚è‘Ö‚¦ê—p‚Ì‘–sƒ‚[ƒh‚Ö
-				sstate = 0;											// Ø‚è‘Ö‚¦‚ªI‚í‚Á‚½‚çA’Êíƒ‚[ƒh(Car.java‚ğQÆ)‚ÉØ‚è‘Ö‚¦‚ğw¦
+				DriveOnTheGreenOutside();							// èµ°è¡Œã™ã‚‹è¼ªã®åˆ‡ã‚Šæ›¿ãˆå°‚ç”¨ã®èµ°è¡Œãƒ¢ãƒ¼ãƒ‰ã¸
+				sstate = 0;											// åˆ‡ã‚Šæ›¿ãˆãŒçµ‚ã‚ã£ãŸã‚‰ã€é€šå¸¸ãƒ¢ãƒ¼ãƒ‰(Car.javaã‚’å‚ç…§)ã«åˆ‡ã‚Šæ›¿ãˆã‚’æŒ‡ç¤º
 				white_scan_count = 0;
 				break;
 			case COLOR_ID_RED:
@@ -220,10 +221,10 @@ public class DriveMode
 	
 	
 	/**
-	 * ƒT[ƒ`ƒ‚[ƒh(ü‚ğŒ©¸‚Á‚½‚Æ‚«‚Ìƒ‚[ƒh)
-	 * ‚¿‚å‚Á‚Æ‚¸‚Â¶ù‰ñ‚µAü‚ğ’T‚·
-	 * —v‰ü—Ç
-	 * @return sstate Ÿ‚Ìƒ‹[ƒv‚ÉÀs‚·‚×‚«‘–sƒ‚[ƒh‚Ìƒtƒ‰ƒO’l
+	 * ã‚µãƒ¼ãƒãƒ¢ãƒ¼ãƒ‰(ç·šã‚’è¦‹å¤±ã£ãŸã¨ãã®ãƒ¢ãƒ¼ãƒ‰)
+	 * ã¡ã‚‡ã£ã¨ãšã¤å·¦æ—‹å›ã—ã€ç·šã‚’æ¢ã™
+	 * è¦æ”¹è‰¯
+	 * @return sstate æ¬¡ã®ãƒ«ãƒ¼ãƒ—æ™‚ã«å®Ÿè¡Œã™ã¹ãèµ°è¡Œãƒ¢ãƒ¼ãƒ‰ã®ãƒ•ãƒ©ã‚°å€¤
 	 */
 	public int SearchLine()
 	{
@@ -231,7 +232,7 @@ public class DriveMode
 		
 		wheel.setSpeed( SEARCH_SPEED_1_2 , SEARCH_SPEED_1_2 );
 		
-		if( sensor.getState() != COLOR_ID_BLACK )				// •ü‚ğŒ©‚Â‚¯‚é‚Ü‚ÅŒp‘±
+		if( sensor.getState() != COLOR_ID_BLACK )				// é»’ç·šã‚’è¦‹ã¤ã‘ã‚‹ã¾ã§ç¶™ç¶š
 		{
 			wheel.TurnRight();
 			Delay.msDelay( 200 );

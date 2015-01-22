@@ -13,7 +13,7 @@ import lejos.nxt.NXTRegulatedMotor;
 /-------------------------------------------------------------------*/
 
 /**
- * ƒzƒC[ƒ‹‚Ì“®ì‚ÌŠÇ—E§Œä‚ğs‚¤ƒNƒ‰ƒX
+ * ãƒ›ã‚¤ãƒ¼ãƒ«ã®å‹•ä½œã®ç®¡ç†ãƒ»åˆ¶å¾¡ã‚’è¡Œã†ã‚¯ãƒ©ã‚¹
  * @author BONN
  */
 public class WheelControl
@@ -21,10 +21,10 @@ public class WheelControl
 	
 	private static NXTRegulatedMotor LWheel = Motor.C; // Left
 	private static NXTRegulatedMotor RWheel = Motor.A; // Right
-	private static int Lspeed , Rspeed;				   // ¶‰EƒzƒC[ƒ‹‚Ì‰ñ“]‘¬“x
+	private static int Lspeed , Rspeed;				   // å·¦å³ãƒ›ã‚¤ãƒ¼ãƒ«ã®å›è»¢é€Ÿåº¦
 	
 	
-	/**@ƒzƒC[ƒ‹‰ñ“]‘¬“x‚ğ200‚Éİ’è‚·‚é@*/
+	/**ã€€ãƒ›ã‚¤ãƒ¼ãƒ«å›è»¢é€Ÿåº¦ã‚’200ã«è¨­å®šã™ã‚‹ã€€*/
 	public WheelControl()
 	{
 		Rspeed = Lspeed = 200;
@@ -34,8 +34,8 @@ public class WheelControl
 	
 	
 	/**
-	 * ƒzƒC[ƒ‹‚Ì‰ñ“]‘¬“x‚ğspeed‚Ì’l‚Éİ’è‚·‚é
-	 * @param speed ƒzƒC[ƒ‹‚Ì‰ñ“]‘¬“x
+	 * ãƒ›ã‚¤ãƒ¼ãƒ«ã®å›è»¢é€Ÿåº¦ã‚’speedã®å€¤ã«è¨­å®šã™ã‚‹
+	 * @param speed ãƒ›ã‚¤ãƒ¼ãƒ«ã®å›è»¢é€Ÿåº¦
 	 */
 	public WheelControl( int Lspeed , int Rspeed )
 	{
@@ -45,8 +45,8 @@ public class WheelControl
 	
 	
 	/**
-	 * ƒzƒC[ƒ‹‚Ì‰ñ“]‘¬“x‚ğ•ÏX‚·‚é
-	 * @param speed	ƒzƒC[ƒ‹‚Ì‰ñ“]‘¬“x
+	 * ãƒ›ã‚¤ãƒ¼ãƒ«ã®å›è»¢é€Ÿåº¦ã‚’å¤‰æ›´ã™ã‚‹
+	 * @param speed	ãƒ›ã‚¤ãƒ¼ãƒ«ã®å›è»¢é€Ÿåº¦
 	 */
 	public void setSpeed( int Lspeed , int Rspeed )
 	{
@@ -56,7 +56,7 @@ public class WheelControl
 	
 	
 	/**
-	 * ¶ƒzƒC[ƒ‹‚Ì‰ñ“]‘¬“x‚ğæ“¾‚·‚é
+	 * å·¦ãƒ›ã‚¤ãƒ¼ãƒ«ã®å›è»¢é€Ÿåº¦ã‚’å–å¾—ã™ã‚‹
 	 * @return Lspeed
 	 */
 	public static int getLSpeed()
@@ -66,7 +66,7 @@ public class WheelControl
 	
 	
 	/**
-	 * ‰EƒzƒC[ƒ‹‚Ì‰ñ“]‘¬“x‚ğæ“¾‚·‚é
+	 * å³ãƒ›ã‚¤ãƒ¼ãƒ«ã®å›è»¢é€Ÿåº¦ã‚’å–å¾—ã™ã‚‹
 	 * @return Rspeed
 	 */
 	public static int getRSpeed()
@@ -76,7 +76,7 @@ public class WheelControl
 	
 	
 	/**
-	 * ¶‚Éù‰ñ
+	 * å·¦ã«æ—‹å›
 	 */
 	public void TurnLeft()
 	{
@@ -86,7 +86,7 @@ public class WheelControl
 	
 	
 	/**
-	 * ‰E‚Éù‰ñ
+	 * å³ã«æ—‹å›
 	 */
 	public void TurnRight()
 	{
@@ -96,7 +96,7 @@ public class WheelControl
 	
 	
 	/**
-	 * ŠÉ‚â‚©‚É¶ù‰ñ
+	 * ç·©ã‚„ã‹ã«å·¦æ—‹å›
 	 */
 	/*public void TurnLeft2()
 	{
@@ -107,7 +107,7 @@ public class WheelControl
 	}*/
 	
 	/**
-	 * ŠÉ‚â‚©‚É‰Eù‰ñ
+	 * ç·©ã‚„ã‹ã«å³æ—‹å›
 	 */
 	/*public void TurnRight2()
 	{
@@ -119,7 +119,7 @@ public class WheelControl
 	
 	
 	/**
-	 * ‚»‚Ìê‚Å¶ù‰ñ(ƒ}ƒVƒ“‚Ì’†S²‚Í‚¸‚ê‚È‚¢)
+	 * ãã®å ´ã§å·¦æ—‹å›(ãƒã‚·ãƒ³ã®ä¸­å¿ƒè»¸ã¯ãšã‚Œãªã„)
 	 */
 	public void RollLeft()
 	{
@@ -129,7 +129,7 @@ public class WheelControl
 	
 	
 	/**
-	 * ‚»‚Ìê‚Å‰Eù‰ñ(ƒ}ƒVƒ“‚Ì’†S²‚Í‚¸‚ê‚È‚¢)
+	 * ãã®å ´ã§å³æ—‹å›(ãƒã‚·ãƒ³ã®ä¸­å¿ƒè»¸ã¯ãšã‚Œãªã„)
 	 */
 	public void RollRight()
 	{
@@ -139,7 +139,7 @@ public class WheelControl
 	
 	
 	/**
-	 * ‘Oi
+	 * å‰é€²
 	 */
 	public void forward()
 	{
@@ -149,7 +149,7 @@ public class WheelControl
 	
 	
 	/**
-	 * ’â~
+	 * åœæ­¢
 	 */
 	public void stop()
 	{

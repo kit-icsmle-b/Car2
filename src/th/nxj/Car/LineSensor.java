@@ -16,32 +16,32 @@ import lejos.util.Delay;
 /-------------------------------------------------------------------*/
 
 /**
- * ƒ‰ƒCƒ“ƒZƒ“ƒT‚ğŠÇ—E§Œä‚·‚éƒNƒ‰ƒX
+ * ãƒ©ã‚¤ãƒ³ã‚»ãƒ³ã‚µã‚’ç®¡ç†ãƒ»åˆ¶å¾¡ã™ã‚‹ã‚¯ãƒ©ã‚¹
  * @author BONN
  *
  */
 public class LineSensor extends Thread
 {
 	
-	/** ŠeF‚Ì–¼‘OB—v‘f‚Ì”Ô†‚ÍF‚ÌID’l‚É‘Î‰‚µ‚Ä‚¢‚é */
+	/** å„è‰²ã®åå‰ã€‚è¦ç´ ã®ç•ªå·ã¯è‰²ã®IDå€¤ã«å¯¾å¿œã—ã¦ã„ã‚‹ */
 	public static final String[] colorNames = {"Red", "Green", "Blue", "Yellow", "Magenta", "Orange",
             "White", "Black", "Pink", "Gray", "Light gray", "Dark Gray", "Cyan"	};
 	
-	/** •F‚ÌID */
+	/** é»’è‰²ã®ID */
 	public static final int COLOR_ID_BLACK = 7;
-	/** ”’F‚ÌID */
+	/** ç™½è‰²ã®ID */
 	public static final int COLOR_ID_WHITE = 6;
-	/** ƒfƒBƒŒƒC‚Ì—LŒøŠÔ */
+	/** ãƒ‡ã‚£ãƒ¬ã‚¤ã®æœ‰åŠ¹æ™‚é–“ */
 	private final int DELAY_VALUE = 10;//50//100
-	/** Œ»İƒZƒ“ƒT‚ªæ“¾‚µ‚Ä‚¢‚éF‚ÌID */
+	/** ç¾åœ¨ã‚»ãƒ³ã‚µãŒå–å¾—ã—ã¦ã„ã‚‹è‰²ã®ID */
 	private static int state = 0;
 	
-	/** ƒJƒ‰[ƒZƒ“ƒT§Œä—p‚ÌƒCƒ“ƒXƒ^ƒ“ƒX */
+	/** ã‚«ãƒ©ãƒ¼ã‚»ãƒ³ã‚µåˆ¶å¾¡ç”¨ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ */
 	private static ColorHTSensor CSensor = new ColorHTSensor( SensorPort.S1 );
 	
 	
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ªŒÄ‚Ño‚³‚ê‚½“_‚ÅƒXƒŒƒbƒh‚Ì“®ì‚ğŠJn‚·‚é
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãŒå‘¼ã³å‡ºã•ã‚ŒãŸæ™‚ç‚¹ã§ã‚¹ãƒ¬ãƒƒãƒ‰ã®å‹•ä½œã‚’é–‹å§‹ã™ã‚‹
 	 */
 	public LineSensor()
 	{
@@ -50,7 +50,7 @@ public class LineSensor extends Thread
 	
 	
 	/**
-	 * DELAY_VALUEƒ~ƒŠ•b‚²‚Æ‚ÉFî•ñ‚ğæ“¾‚µALCD‚ÉF‚ÌID’l‚ğ•\¦‚·‚é
+	 * DELAY_VALUEãƒŸãƒªç§’ã”ã¨ã«è‰²æƒ…å ±ã‚’å–å¾—ã—ã€LCDã«è‰²ã®IDå€¤ã‚’è¡¨ç¤ºã™ã‚‹
 	 */
 	public void run()
 	{
@@ -64,8 +64,8 @@ public class LineSensor extends Thread
 	
 	
 	/**
-	 * ƒZƒ“ƒT[‚©‚çæ“¾‚µ‚½F‚ÌID’l‚ğ•Ô‚·
-	 * @return F‚ÌID’l
+	 * ã‚»ãƒ³ã‚µãƒ¼ã‹ã‚‰å–å¾—ã—ãŸè‰²ã®IDå€¤ã‚’è¿”ã™
+	 * @return è‰²ã®IDå€¤
 	 */
 	public int getState()
 	{
