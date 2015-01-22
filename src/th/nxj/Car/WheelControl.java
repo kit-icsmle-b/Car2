@@ -19,8 +19,8 @@ import lejos.nxt.NXTRegulatedMotor;
 public class WheelControl
 {
 	
-	private static NXTRegulatedMotor LWheel = Motor.C; // Left
-	private static NXTRegulatedMotor RWheel = Motor.A; // Right
+	private static NXTRegulatedMotor LWheel = Motor.C; // 左ホイール
+	private static NXTRegulatedMotor RWheel = Motor.A; // 右ホイール
 	private static int Lspeed , Rspeed;				   // 左右ホイールの回転速度
 	
 	
