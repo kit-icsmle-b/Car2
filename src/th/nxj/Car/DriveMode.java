@@ -32,12 +32,12 @@ public class DriveMode
 	public static final int NORMAL_SPEED_2 = 50;
 	
 	/** 緑通過時のスピード */
-	public static final int SLOW_SPEED_1 = 300;
+	public static final int SLOW_SPEED_1 = 280;
 	public static final int SLOW_SPEED_2 = 10;
 	
 	/** メビウスモード(小さい輪の中を走行する時)時のスピード */
-	public static final int MOBIUS_SPEED_1 = 400;
-	public static final int MOBIUS_SPEED_2 = 170;
+	public static final int MOBIUS_SPEED_1 = 450;//400
+	public static final int MOBIUS_SPEED_2 = 190;//170
 	
 	/** サーチモード時のスピード */
 	public static final int SEARCH_SPEED_1_2 = 100;
@@ -82,9 +82,9 @@ public class DriveMode
 				break;
 			case COLOR_ID_WHITE:
 				if( mobius_pass_flag == 0 )
-					wheel.setSpeed( NORMAL_SPEED_1 , NORMAL_SPEED_2 + 60 );
+					wheel.setSpeed( NORMAL_SPEED_1 , NORMAL_SPEED_2 + 30 );
 				else
-					wheel.setSpeed( NORMAL_SPEED_1 , NORMAL_SPEED_2 + 250 );
+					wheel.setSpeed( NORMAL_SPEED_1 + 100 , NORMAL_SPEED_2 + 300 );//250
 				wheel.forward();
 				break;
 			case COLOR_ID_GREEN:
@@ -102,7 +102,7 @@ public class DriveMode
 		if( color_state_prev == COLOR_ID_WHITE )
 			line_lost_time++;
 		
-		if( line_lost_time > /*5000*/10000 )									 // 黒線を見失っている時間が5000カウントを超えたら
+		if( line_lost_time > /*5000*/15000 )									 // 黒線を見失っている時間が5000カウントを超えたら
 			sstate = 1;												 // サーチモード(Car.javaを参照)に切り替えを指示
 		
 		return sstate;
@@ -152,6 +152,7 @@ public class DriveMode
 		
 		for(;;)
 		{
+			line_lost_time = 0;
 			color = sensor.getState();
 			if( color_state_prev != color )
 			{
@@ -197,7 +198,8 @@ public class DriveMode
 			case COLOR_ID_WHITE:
 				wheel.setSpeed( MOBIUS_SPEED_2 , MOBIUS_SPEED_1 );
 				wheel.forward();
-				white_scan_count+=25;
+				if( white_scan_count < 140 )
+					white_scan_count+=35;//25
 				break;
 			case COLOR_ID_GREEN:
 				DriveOnTheGreenOutside();							// 走行する輪の切り替え専用の走行モードへ
@@ -212,7 +214,7 @@ public class DriveMode
 		if( color_state_prev == COLOR_ID_WHITE )
 			line_lost_time++;
 		
-		if( line_lost_time > 5000 )
+		if( line_lost_time > 10000 )
 			sstate = 1;
 		
 		return sstate;
