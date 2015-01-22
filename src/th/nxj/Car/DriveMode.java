@@ -28,16 +28,16 @@ public class DriveMode
 	public static final int COLOR_ID_RED = 0;
 	
 	/** 通常時のスピード */
-	public static final int FORWARD_SPEED_1 = 500;
-	public static final int FORWARD_SPEED_2 = 70;
+	public static final int NORMAL_SPEED_1 = 430;
+	public static final int NORMAL_SPEED_2 = 50;
 	
 	/** 緑通過時のスピード */
-	public static final int SLOW_SPEED_1 = 400;
-	public static final int SLOW_SPEED_2 = 20;
+	public static final int SLOW_SPEED_1 = 300;
+	public static final int SLOW_SPEED_2 = 10;
 	
 	/** メビウスモード(小さい輪の中を走行する時)時のスピード */
 	public static final int MOBIUS_SPEED_1 = 400;
-	public static final int MOBIUS_SPEED_2 = 70;
+	public static final int MOBIUS_SPEED_2 = 170;
 	
 	/** サーチモード時のスピード */
 	public static final int SEARCH_SPEED_1_2 = 100;
@@ -45,7 +45,9 @@ public class DriveMode
 	
 	private static int line_lost_time;												// 黒線を見失い続けている時間
 	private static int color_state_prev;											// 直前のカラーセンサの値
-	WheelControl wheel = new WheelControl( FORWARD_SPEED_1 , FORWARD_SPEED_1 );		// タイヤの制御処理のインスタンス
+	private static int white_scan_count = 0;
+	private static int mobius_pass_flag = 0;
+	WheelControl wheel = new WheelControl( NORMAL_SPEED_1 , NORMAL_SPEED_1 );		// タイヤの制御処理のインスタンス
 	LineSensor sensor = new LineSensor();											// カラーセンサーのインスタンス
 	
 	/**
@@ -74,12 +76,15 @@ public class DriveMode
 			switch( color )
 			{
 			case COLOR_ID_BLACK:
-				wheel.setSpeed( FORWARD_SPEED_2 , FORWARD_SPEED_1 );
+				wheel.setSpeed( NORMAL_SPEED_2 , NORMAL_SPEED_1 );
 				wheel.forward();
 				line_lost_time = 0;									 // 黒線が検出されたので、ロストしている時間を0に戻す
 				break;
 			case COLOR_ID_WHITE:
-				wheel.setSpeed( FORWARD_SPEED_1 , FORWARD_SPEED_2 );
+				if( mobius_pass_flag == 0 )
+					wheel.setSpeed( NORMAL_SPEED_1 , NORMAL_SPEED_2 + 60 );
+				else
+					wheel.setSpeed( NORMAL_SPEED_1 , NORMAL_SPEED_2 + 250 );
 				wheel.forward();
 				break;
 			case COLOR_ID_GREEN:
@@ -89,13 +94,15 @@ public class DriveMode
 			case COLOR_ID_RED:
 				wheel.stop();										 // 赤色はゴールなので停止
 				line_lost_time = 0;
+				white_scan_count = 0;
+				mobius_pass_flag = 0;
 			}
 			color_state_prev = color;								 // 直前のセンサ値を更新
 		}
 		if( color_state_prev == COLOR_ID_WHITE )
 			line_lost_time++;
 		
-		if( line_lost_time > 5000 )									 // 黒線を見失っている時間が5000カウントを超えたら
+		if( line_lost_time > /*5000*/10000 )									 // 黒線を見失っている時間が5000カウントを超えたら
 			sstate = 1;												 // サーチモード(Car.javaを参照)に切り替えを指示
 		
 		return sstate;
@@ -151,6 +158,7 @@ public class DriveMode
 				switch( color )										// センサーから色情報を取得
 				{
 				case COLOR_ID_BLACK:
+					mobius_pass_flag = 1;
 					return;											// 無事黒線が見つかったことになるので、処理を抜ける
 				case COLOR_ID_WHITE:
 					wheel.setSpeed( SLOW_SPEED_1 , SLOW_SPEED_2 );
@@ -182,21 +190,22 @@ public class DriveMode
 			switch( color )											// カラーセンサから色情報を取得
 			{
 			case COLOR_ID_BLACK:
-				wheel.setSpeed( MOBIUS_SPEED_1 , MOBIUS_SPEED_2 );
+				wheel.setSpeed( MOBIUS_SPEED_1 + white_scan_count , MOBIUS_SPEED_2 );
 				wheel.forward();
 				line_lost_time = 0;
 				break;
 			case COLOR_ID_WHITE:
 				wheel.setSpeed( MOBIUS_SPEED_2 , MOBIUS_SPEED_1 );
 				wheel.forward();
+				white_scan_count+=25;
 				break;
 			case COLOR_ID_GREEN:
 				DriveOnTheGreenOutside();							// 走行する輪の切り替え専用の走行モードへ
 				sstate = 0;											// 切り替えが終わったら、通常モード(Car.javaを参照)に切り替えを指示
+				white_scan_count = 0;
 				break;
-			/*case COLOR_ID_RED:
-				wheel.TurnRight2();
-				line_lost_time = 0;*/
+			case COLOR_ID_RED:
+				wheel.stop();										// emergency stop.
 			}
 			color_state_prev = color;
 		}

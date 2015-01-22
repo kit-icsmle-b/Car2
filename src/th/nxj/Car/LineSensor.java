@@ -32,7 +32,7 @@ public class LineSensor extends Thread
 	/** 白色のID */
 	public static final int COLOR_ID_WHITE = 6;
 	/** ディレイの有効時間 */
-	private final int DELAY_VALUE = 30;//50//100
+	private final int DELAY_VALUE = 10;//50//100
 	/** 現在センサが取得している色のID */
 	private static int state = 0;
 	
